@@ -23,8 +23,6 @@ export async function POST(request) {
       headers: {
         'Authorization': `Bearer ${process.env.OPENAI_2_API_KEY}`,
         'Content-Type': 'application/json',
-        // 'HTTP-Referer': 'http://localhost:3000',
-        //'X-Title': 'Comparison App'
       },
       body: JSON.stringify({
         model: 'google/gemini-3-flash-preview', // This model is cheaper
