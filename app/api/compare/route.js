@@ -23,7 +23,7 @@ export async function POST(request) {
       headers: {
         'Authorization': `Bearer ${process.env.OPENAI_2_API_KEY}`,
         'Content-Type': 'application/json',
-       // 'HTTP-Referer': 'http://localhost:3000',
+        // 'HTTP-Referer': 'http://localhost:3000',
         //'X-Title': 'Comparison App'
       },
       body: JSON.stringify({
@@ -49,7 +49,7 @@ export async function POST(request) {
     if (!response.ok) {
       const errorData = await response.json()
       console.error('OpenRouter Error:', errorData)
-      
+
       // Fallback to simpler model or response
       return NextResponse.json({
         item1, item2,
@@ -63,22 +63,22 @@ export async function POST(request) {
 
     const result = await response.json()
     const content = result.choices[0].message.content
-    
+
     // Try to extract JSON from the response
     try {
       const jsonMatch = content.match(/\{[\s\S]*\}/)
       const jsonString = jsonMatch ? jsonMatch[0] : content
       const data = JSON.parse(jsonString)
-      
+
       // Ensure it has the expected structure
       if (!data.comparisons || !data.summary) {
         throw new Error('Invalid response structure')
-      } 
-      
+      }
+
       data.generatedAt = new Date().toISOString()
       data.creditsUsed = result.usage?.total_tokens || 0
-      
-      return NextResponse.json(data)
+
+      return NextResponse.json({ ...data, item1, item2 })
     } catch (parseError) {
       console.log('JSON parsing failed, using fallback')
       return NextResponse.json({
@@ -93,7 +93,7 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('API Error:', error)
-    
+
     // Try to get items from request body for fallback
     //let item1 = 'Item1', item2 = 'Item2'
     try {
@@ -104,7 +104,7 @@ export async function POST(request) {
     } catch (e) {
       // Use default values
     }
-    
+
     return NextResponse.json({
       item1, item2,
       comparisons: fallbackComparisons(item1, item2),

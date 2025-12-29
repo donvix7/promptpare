@@ -8,7 +8,7 @@ const ImageForm = () => {
   const [preview1, setPreview1] = useState(null)
   const [preview2, setPreview2] = useState(null)
   const [prompt, setPrompt] = useState('')
-
+  const [loading, setLoading] = useState(false)
 
   const handleHandleFileChange = (e, setItem, setPreview) => {
     const file = e.target.files[0]
@@ -19,7 +19,9 @@ const ImageForm = () => {
   }
 
   const handleCompare = () => {
+    //setLoading(true)
     console.log(item1, item2)
+    alert("Image comparison coming soon!")
   }
 
   const handleSubmit = (e) => {
